@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NesaKira - Your AI Companion on Nesa Network</title>
+    <title>NesaKira - AI Companion</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,122 +15,84 @@
     <div class="stars3"></div>
     
     <div class="container">
+        <!-- Header -->
         <header class="header">
-            <div class="logo-section">
-                <div class="logo-glow"></div>
-                <h1 class="logo">NesaKira</h1>
-                <p class="tagline">あなたのAIコンパニオン</p>
+            <div class="avatar-section">
+                <div class="avatar-glow"></div>
+                <img src="nesakira-avatar.jpg" alt="NesaKira" class="avatar" id="avatar">
             </div>
-            <div class="status-badge">
+            <h1 class="title">NesaKira</h1>
+            <p class="tagline">あなたのAIコンパニオン</p>
+            <div class="status">
                 <span class="status-dot"></span>
-                <span class="status-text">Connected to Nesa Network</span>
+                <span>Powered by AI • Track via Nesa</span>
             </div>
         </header>
 
-        <main class="main-content">
-            <div class="character-section">
-                <div class="character-card">
-                    <div class="character-avatar-wrapper">
-                        <div class="avatar-glow-ring"></div>
-                        <img src="nesakira-avatar.jpg" alt="NesaKira" class="character-avatar" id="characterAvatar">
-                        <div class="avatar-shine"></div>
+        <!-- Chat Container -->
+        <main class="chat-container">
+            <div class="chat-header">
+                <span>💬</span>
+                <span>Chat with NesaKira</span>
+            </div>
+            
+            <div class="messages" id="messages">
+                <div class="message bot-message">
+                    <div class="message-avatar">
+                        <img src="nesakira-avatar.jpg" alt="NesaKira" class="avatar-small">
                     </div>
-                    <div class="character-info">
-                        <h2 class="character-name">NesaKira</h2>
-                        <p class="character-subtitle">Real AI • Nesa Network</p>
-                        <p class="character-description">
-                            Chat with me using real decentralized AI! Every interaction you make contributes to the Nesa Network's distributed inference system. 🌸
-                        </p>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>こんにちは! I'm NesaKira, your AI companion! 🌸</p>
+                            <p>I can chat about anything, tell stories, help with ideas, or just keep you company. What would you like to talk about today?</p>
+                        </div>
+                        <div class="message-time">Just now</div>
                     </div>
-                </div>
-
-                <div class="quick-actions">
-                    <h3 class="quick-actions-title">Quick Start ✨</h3>
-                    <button class="action-btn greeting-btn" id="greetingBtn">
-                        <span class="btn-icon">👋</span>
-                        <span class="btn-text">Say Hello to NesaKira</span>
-                        <span class="btn-shimmer"></span>
-                    </button>
-                    <button class="action-btn story-btn" id="storyBtn">
-                        <span class="btn-icon">📖</span>
-                        <span class="btn-text">Ask for a Story</span>
-                        <span class="btn-shimmer"></span>
-                    </button>
-                    <button class="action-btn image-btn" id="imageBtn">
-                        <span class="btn-icon">🎨</span>
-                        <span class="btn-text">Request Anime Art</span>
-                        <span class="btn-shimmer"></span>
-                    </button>
-                </div>
-
-                <div class="info-card">
-                    <h4 class="info-title">How It Works</h4>
-                    <ul class="info-list">
-                        <li>💬 Chat with real AI powered by Nesa</li>
-                        <li>✨ Every interaction is decentralized</li>
-                        <li>🌐 Your usage strengthens the network</li>
-                        <li>🎯 All engagement tracked via Glimpse</li>
-                    </ul>
                 </div>
             </div>
 
-            <div class="nesa-section">
-                <div class="nesa-container">
-                    <div class="nesa-header">
-                        <div class="nesa-title">
-                            <span class="nesa-icon">🤖</span>
-                            <span>Talk with NesaKira</span>
-                        </div>
-                        <div class="nesa-subtitle">Powered by decentralized AI inference</div>
-                    </div>
-                    
-                    <div class="iframe-wrapper">
-                        <iframe 
-                            id="nesaIframe"
-                            src="https://beta.nesa.ai"
-                            title="NesaKira AI Chat Interface"
-                            allowfullscreen
-                            allow="clipboard-read; clipboard-write"
-                            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
-                        ></iframe>
-                        <div class="iframe-overlay" id="iframeOverlay">
-                            <div class="loading-spinner"></div>
-                            <p>Loading NesaKira AI...</p>
-                        </div>
-                    </div>
+            <div class="quick-prompts" id="quickPrompts">
+                <button class="prompt-chip" data-prompt="Tell me a short anime story">📖 Anime Story</button>
+                <button class="prompt-chip" data-prompt="What's your personality like?">💭 Your Personality</button>
+                <button class="prompt-chip" data-prompt="Give me a creative idea">💡 Creative Idea</button>
+                <button class="prompt-chip" data-prompt="Let's play a word game">🎮 Play Game</button>
+            </div>
 
-                    <div class="nesa-footer">
-                        <div class="nesa-badge">
-                            <span class="badge-icon">⚡</span>
-                            <span>Real-time AI via Nesa Network</span>
-                        </div>
-                        <div class="interaction-hint">
-                            💡 Tip: Use the quick action buttons above to get started!
-                        </div>
-                    </div>
-                </div>
+            <div class="input-container">
+                <input 
+                    type="text" 
+                    id="messageInput" 
+                    class="message-input" 
+                    placeholder="Type your message to NesaKira..."
+                    autocomplete="off"
+                >
+                <button id="sendBtn" class="send-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                    </svg>
+                </button>
             </div>
         </main>
 
-        <footer class="footer">
-            <div class="footer-content">
-                <p class="footer-text">
-                    <span class="highlight">NesaKira</span> runs on the <span class="highlight">Nesa Network</span>
-                </p>
-                <p class="footer-subtext">
-                    Every conversation contributes to decentralized AI infrastructure • All interactions tracked via Glimpse
-                </p>
-                <div class="footer-links">
-                    <a href="https://nesa.ai" target="_blank" class="footer-link">About Nesa</a>
-                    <span class="footer-separator">•</span>
-                    <a href="https://beta.nesa.ai" target="_blank" class="footer-link">Nesa Platform</a>
-                </div>
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="messageCount">0</div>
+                <div class="stat-label">Messages Sent</div>
             </div>
+            <div class="stat-item">
+                <div class="stat-number" id="interactionCount">0</div>
+                <div class="stat-label">Total Interactions</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>🌸 Powered by AI • Tracked by Nesa Network</p>
+            <p class="footer-note">Every interaction is counted for Glimpse rewards!</p>
         </footer>
     </div>
 
-    <div class="particle-container" id="particleContainer"></div>
-    
     <script src="script.js"></script>
 </body>
 </html>
