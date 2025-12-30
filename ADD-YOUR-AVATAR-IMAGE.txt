@@ -1,0 +1,103 @@
+📸 IMPORTANT: ADD YOUR NESAKIRA AVATAR IMAGE
+==========================================
+
+This file is a reminder that you need to add your character's profile image!
+
+🎯 WHAT YOU NEED TO DO:
+----------------------
+
+1. Find or create an image of your NesaKira character
+   - Anime style works best
+   - Square format recommended (500x500px or larger)
+   - Should be clear and high quality
+
+2. Rename your image file to:
+   nesakira-avatar.jpg
+   
+   ⚠️ Important:
+   - Must be exactly this name
+   - All lowercase letters
+   - .jpg extension (not .png, .jpeg, or anything else)
+
+3. Place it in the SAME FOLDER as:
+   - index.html
+   - style.css
+   - script.js
+
+4. When uploading to GitHub:
+   - Upload this image along with the other 3 files
+   - Make sure it's in the root folder (not in a subfolder)
+
+🎨 IMAGE SPECIFICATIONS:
+-----------------------
+
+Format: JPG/JPEG
+Recommended Size: 500x500 pixels (or larger, square format)
+File Size: Keep under 500KB for best performance
+Style: Anime/illustrated character
+Background: Any (will be cropped to circle)
+
+✨ WHAT HAPPENS IF YOU DON'T ADD IT:
+------------------------------------
+
+Don't worry! The website will still work perfectly.
+
+If the image is missing, users will see:
+- A beautiful gradient circle (pink/purple colors)
+- A sparkle emoji (✨) in the center
+- Still looks great, just without your custom character
+
+You can always add your image later by:
+1. Going to your GitHub repository
+2. Clicking "Add file" → "Upload files"
+3. Uploading nesakira-avatar.jpg
+4. Committing the change
+
+The website will automatically show your image once uploaded!
+
+🖼️ WHERE IS THIS IMAGE USED:
+-----------------------------
+
+Your avatar appears in multiple places:
+- Main character card (large, center of page)
+- Chat messages (small avatar next to bot replies)
+- These images are automatically synchronized
+
+📝 EXAMPLE FILE NAMES:
+----------------------
+
+✅ CORRECT:
+   nesakira-avatar.jpg
+
+❌ WRONG:
+   NesaKira-Avatar.jpg  (wrong capitalization)
+   nesakira-avatar.JPG  (wrong extension case)
+   nesakira-avatar.png  (wrong format)
+   nesakira_avatar.jpg  (underscore instead of hyphen)
+   my-character.jpg     (wrong name)
+
+🚀 READY TO DEPLOY?
+------------------
+
+Once you have your image ready:
+
+1. Rename it to nesakira-avatar.jpg
+2. Put it with your other files
+3. Follow the DEPLOYMENT-GUIDE.md
+4. Upload all 4 files to GitHub
+5. Enable GitHub Pages
+6. Your site will be live!
+
+💡 TIP: If you're creating an image, consider:
+- Vibrant anime colors
+- Friendly, welcoming expression
+- Clear facial features
+- High contrast for visibility
+- Unique design that matches your style!
+
+---
+
+Once you've added your image, you can delete this reminder file.
+It's only here to help you remember! 🌸
+
+Happy deploying! ✨
