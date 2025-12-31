@@ -285,35 +285,72 @@ function removeTypingIndicator(id) {
 
 // Send Glimpse tracking event to Nesa
 function sendGlimpseEvent(eventName = 'click-event') {
-    // Check if we're inside an iframe (Nesa platform)
+    // Check if we were opened from Nesa platform
+    const hasOpener = window.opener !== null;
     const isInIframe = window.self !== window.top;
     
-    if (!isInIframe) {
-        console.log('ℹ️ Not in iframe - Glimpse tracking skipped');
-        console.log('💡 To test tracking: Open via beta.nesa.ai/dai/nesakira');
+    // If not opened from Nesa and not in iframe, skip tracking
+    if (!hasOpener && !isInIframe) {
+        console.log('ℹ️ Not opened from Nesa - Glimpse tracking skipped');
+        console.log('💡 Access via: beta.nesa.ai/dai/nesakira');
         return;
     }
     
     try {
-        // Send to parent window (Nesa platform)
-        window.parent.postMessage(
-            {
-                data: { event: eventName },
-                type: 'response_data',
-            },
-            'https://beta.nesa.ai'
-        );
+        let eventSent = false;
         
-        // Also try wildcard for compatibility
-        window.top.postMessage(
-            {
-                data: { event: eventName },
-                type: 'response_data',
-            },
-            '*'
-        );
+        // Method 1: Try iframe method (if in iframe)
+        if (isInIframe) {
+            try {
+                window.parent.postMessage(
+                    {
+                        data: { event: eventName },
+                        type: 'response_data',
+                    },
+                    'https://beta.nesa.ai'
+                );
+                window.parent.postMessage(
+                    {
+                        data: { event: eventName },
+                        type: 'response_data',
+                    },
+                    '*'
+                );
+                eventSent = true;
+                console.log(`✅ Glimpse event sent via iframe: ${eventName}`);
+            } catch (e) {
+                console.log('⚠️ Iframe method failed:', e.message);
+            }
+        }
         
-        console.log(`✅ Glimpse event sent: ${eventName}`);
+        // Method 2: Try opener method (if opened from Nesa)
+        if (hasOpener && window.opener) {
+            try {
+                window.opener.postMessage(
+                    {
+                        data: { event: eventName },
+                        type: 'response_data',
+                    },
+                    'https://beta.nesa.ai'
+                );
+                window.opener.postMessage(
+                    {
+                        data: { event: eventName },
+                        type: 'response_data',
+                    },
+                    '*'
+                );
+                eventSent = true;
+                console.log(`✅ Glimpse event sent via opener: ${eventName}`);
+            } catch (e) {
+                console.log('⚠️ Opener method failed:', e.message);
+            }
+        }
+        
+        if (!eventSent) {
+            console.log('⚠️ No valid tracking method available');
+        }
+        
     } catch (error) {
         console.error('❌ Glimpse error:', error);
     }
