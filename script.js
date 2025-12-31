@@ -7,7 +7,7 @@
 const CONFIG = {
     // Groq API configuration
     // User will set this as environment variable in Vercel
-    GROQ_API_KEY: 'GROQ_API_KEY_PLACEHOLDER', // Will be replaced by Vercel env var
+    GROQ_API_KEY: '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', // Will be replaced by Vercel env var
     GROQ_API_URL: 'https://api.groq.com/openai/v1/chat/completions',
     MODEL: 'llama-3.1-8b-instant',
     
