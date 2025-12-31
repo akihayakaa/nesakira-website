@@ -7,7 +7,7 @@
 const CONFIG = {
     // Groq API configuration
     // User will set this as environment variable in Vercel
-    GROQ_API_KEY: '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', // Will be replaced by Vercel env var
+    GROQ_API_KEY: 'GROQ_API_KEY_PLACEHOLDER', // Will be replaced by Vercel env var
     GROQ_API_URL: 'https://api.groq.com/openai/v1/chat/completions',
     MODEL: 'llama-3.1-8b-instant',
     
@@ -61,6 +61,10 @@ function setupEventListeners() {
         chip.addEventListener('click', () => {
             const prompt = chip.dataset.prompt;
             messageInput.value = prompt;
+            
+            // Send quick prompt event
+            sendGlimpseEvent('quick-prompt-used');
+            
             handleSendMessage();
         });
     });
@@ -75,13 +79,18 @@ async function handleSendMessage() {
     // Disable input
     setLoading(true);
     
-    // Send Nesa tracking event
-    sendGlimpseEvent();
+    // Send Nesa tracking event with specific event name
+    sendGlimpseEvent('chat-message-sent');
     
     // Update stats
     messageCount++;
     interactionCount++;
     updateStats();
+    
+    // Send additional event for multiple messages
+    if (messageCount >= 3) {
+        sendGlimpseEvent('conversation-continued');
+    }
     
     // Add user message to chat
     addMessage(message, 'user');
@@ -275,27 +284,38 @@ function removeTypingIndicator(id) {
 }
 
 // Send Glimpse tracking event to Nesa
-function sendGlimpseEvent() {
+function sendGlimpseEvent(eventName = 'click-event') {
+    // Check if we're inside an iframe (Nesa platform)
+    const isInIframe = window.self !== window.top;
+    
+    if (!isInIframe) {
+        console.log('ℹ️ Not in iframe - Glimpse tracking skipped');
+        console.log('💡 To test tracking: Open via beta.nesa.ai/dai/nesakira');
+        return;
+    }
+    
     try {
+        // Send to parent window (Nesa platform)
         window.parent.postMessage(
             {
-                data: { event: 'click-event' },
+                data: { event: eventName },
                 type: 'response_data',
             },
             'https://beta.nesa.ai'
         );
         
+        // Also try wildcard for compatibility
         window.top.postMessage(
             {
-                data: { event: 'click-event' },
+                data: { event: eventName },
                 type: 'response_data',
             },
             '*'
         );
         
-        console.log('✅ Glimpse event sent');
+        console.log(`✅ Glimpse event sent: ${eventName}`);
     } catch (error) {
-        console.error('Glimpse error:', error);
+        console.error('❌ Glimpse error:', error);
     }
 }
 
