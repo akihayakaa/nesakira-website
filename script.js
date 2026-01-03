@@ -5,10 +5,10 @@
 
 // Configuration
 const CONFIG = {
-    // Groq API configuration
-    // User will set this as environment variable in Vercel
-    GROQ_API_KEY: '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', // Will be replaced by Vercel env var
+    USE_SERVERLESS: true,  // ← CHANGE ke true!
+    GROQ_API_KEY: '',      // ← KOSONG! (aman!)
     GROQ_API_URL: 'https://api.groq.com/openai/v1/chat/completions',
+    CHAT_ENDPOINT: '/api/chat',  // ← Backend endpoint
     MODEL: 'llama-3.1-8b-instant',
     
     // NesaKira personality
