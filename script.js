@@ -1,14 +1,15 @@
 // ============================================
-// NesaKira - REAL AI Chat with Groq API
+// NesaKira - REAL AI Chat with Backend API
 // + Nesa Glimpse Tracking
 // ============================================
 
 // Configuration
 const CONFIG = {
-    USE_SERVERLESS: true,  // ← CHANGE ke true!
-    GROQ_API_KEY: '',      // ← KOSONG! (aman!)
+    // Use serverless function (API key hidden in backend)
+    USE_SERVERLESS: true,
+    GROQ_API_KEY: '', // Empty - key stored in Vercel env var
     GROQ_API_URL: 'https://api.groq.com/openai/v1/chat/completions',
-    CHAT_ENDPOINT: '/api/chat',  // ← Backend endpoint
+    CHAT_ENDPOINT: '/api/chat', // Backend serverless function
     MODEL: 'llama-3.1-8b-instant',
     
     // NesaKira personality
@@ -138,73 +139,107 @@ async function handleSendMessage() {
     setLoading(false);
 }
 
-// Get AI response from Groq
+// Get AI response from backend
 async function getAIResponse(userMessage) {
-    // Check if we have API key
-    const apiKey = getAPIKey();
-    
-    if (!apiKey || apiKey === 'GROQ_API_KEY_PLACEHOLDER') {
-        return "Hi! I'm NesaKira! 🌸 To chat with me, please set up your Groq API key. Check the setup instructions!";
-    }
-    
     try {
-        const response = await fetch(CONFIG.GROQ_API_URL, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                model: CONFIG.MODEL,
-                messages: [
-                    {
-                        role: 'system',
-                        content: CONFIG.SYSTEM_PROMPT
-                    },
-                    ...conversationHistory,
-                    {
-                        role: 'user',
-                        content: userMessage
-                    }
-                ],
-                temperature: 0.8,
-                max_tokens: 300,
-                top_p: 0.9,
-            })
-        });
-        
-        if (!response.ok) {
-            throw new Error(`API Error: ${response.status}`);
+        // Use serverless function (API key hidden in backend)
+        if (CONFIG.USE_SERVERLESS) {
+            const response = await fetch(CONFIG.CHAT_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    messages: [
+                        {
+                            role: 'system',
+                            content: CONFIG.SYSTEM_PROMPT
+                        },
+                        ...conversationHistory,
+                        {
+                            role: 'user',
+                            content: userMessage
+                        }
+                    ]
+                })
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || `API Error: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            return data.choices[0].message.content;
         }
         
-        const data = await response.json();
-        return data.choices[0].message.content;
+        // Direct API call (fallback - less secure)
+        else {
+            const apiKey = getAPIKey();
+            
+            if (!apiKey || apiKey === '') {
+                return "Hi! I'm NesaKira! 🌸 To chat with me, please set up the API key in Vercel environment variables.";
+            }
+            
+            const response = await fetch(CONFIG.GROQ_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: CONFIG.MODEL,
+                    messages: [
+                        {
+                            role: 'system',
+                            content: CONFIG.SYSTEM_PROMPT
+                        },
+                        ...conversationHistory,
+                        {
+                            role: 'user',
+                            content: userMessage
+                        }
+                    ],
+                    temperature: 0.8,
+                    max_tokens: 300,
+                    top_p: 0.9,
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
         
     } catch (error) {
-        console.error('Groq API Error:', error);
+        console.error('AI API Error:', error);
         throw error;
     }
 }
 
-// Get API key (from environment or fallback)
+// Get API key (only used in direct mode)
 function getAPIKey() {
-    // In production (Vercel), this will be replaced by environment variable
-    // For local testing, you can temporarily paste your key here
     return CONFIG.GROQ_API_KEY;
 }
 
 // Check if API key is configured
 function checkAPIKey() {
-    const apiKey = getAPIKey();
-    
-    if (!apiKey || apiKey === 'GROQ_API_KEY_PLACEHOLDER') {
-        console.warn('⚠️ Groq API key not configured!');
-        console.log('📝 To enable AI chat:');
-        console.log('1. Get free API key from: https://console.groq.com');
-        console.log('2. In Vercel: Settings → Environment Variables');
-        console.log('3. Add: GROQ_API_KEY = your_key_here');
+    if (CONFIG.USE_SERVERLESS) {
+        console.log('✅ Using serverless function (API key hidden)');
+        console.log('💡 API key is secure in Vercel environment variables');
     } else {
-        console.log('✅ Groq API key configured');
+        const apiKey = getAPIKey();
+        
+        if (!apiKey || apiKey === '') {
+            console.warn('⚠️ Direct API mode: API key not configured!');
+            console.log('📝 Set GROQ_API_KEY in script.js or use serverless mode');
+        } else {
+            console.log('✅ Direct API mode: API key configured');
+            console.warn('⚠️ Warning: API key is visible in client code!');
+        }
     }
 }
 
@@ -435,23 +470,32 @@ function escapeHtml(text) {
 // Log initialization
 function logInit() {
     console.log('%c🌸 NesaKira AI Companion', 'color: #ff6b9d; font-size: 20px; font-weight: bold;');
-    console.log('%cReal AI powered by Groq', 'color: #ffa8cc; font-size: 14px;');
+    console.log('%cReal AI powered by Groq (Backend)', 'color: #ffa8cc; font-size: 14px;');
     console.log('%cTracked by Nesa Network', 'color: #c94b7d; font-size: 14px;');
     console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #ff6b9d;');
     console.log('');
-    console.log('✅ Chat functionality: REAL AI');
+    console.log('✅ Chat functionality: REAL AI (Backend)');
     console.log('✅ Glimpse tracking: ACTIVE');
     console.log('💡 Model: Llama 3.1 8B (via Groq)');
+    console.log('🔒 API Key: Secure (hidden in backend)');
     console.log('');
 }
 
 // Send initial load event
 setTimeout(() => {
     try {
-        window.parent.postMessage(
-            { data: { event: 'glimpse-loaded' }, type: 'status' },
-            '*'
-        );
+        if (window.opener) {
+            window.opener.postMessage(
+                { data: { event: 'glimpse-loaded' }, type: 'status' },
+                '*'
+            );
+        }
+        if (window.self !== window.top) {
+            window.parent.postMessage(
+                { data: { event: 'glimpse-loaded' }, type: 'status' },
+                '*'
+            );
+        }
     } catch (e) {
         // Ignore
     }
